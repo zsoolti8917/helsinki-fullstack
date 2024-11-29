@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState } from 'react'
 import PropTypes from 'prop-types';
 
 
@@ -27,20 +27,42 @@ function App() {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const [total, setTotal] = useState(0)
+  const [average, setAverage] = useState(0)
+  const [positive, setPositive] = useState(0)
 
-  const handleClick = (text) => {
-    switch(text){
-      case "Good":
-        setGood(good + 1);
-        break;
-      case "Neutral":
-        setNeutral(neutral+1);
-        break;
-      case "Bad":
-        setBad(bad+1);
-        break;
+
+  const handleClick = (type) => {
+    if (type === "Good") {
+      setGood(good + 1);
+    } else if (type === "Neutral") {
+      setNeutral(neutral + 1);
+    } else if (type === "Bad") {
+      setBad(bad + 1);
     }
-  }
+    setTotal(total + 1);
+  };
+
+  useEffect(() => {
+    const calculateAverage = () => {
+        setAverage((good - bad) / (total))
+    };
+
+    const calculatePositive = () => {
+      setPositive((good*100)/total)
+    };
+    if(total !== 0){
+      if(!(((good - bad) / (total)) < 0)){
+        calculateAverage();
+      }
+      if(!(((good*100)/total) < 0)){
+        calculatePositive();
+      }
+
+    }
+
+  }, [good, bad, neutral, total]);
+
   return (
     <>
      <Heading title="Give feedback" />
@@ -51,8 +73,12 @@ function App() {
      <Statistics text="Good" value={good} />
      <Statistics text="Neutral" value={neutral} />
      <Statistics text="Bad" value={bad} />
+     <Statistics text="All" value={total} />
+     <Statistics text="Average" value={average} />
+     <Statistics text="Positive" value={positive} />
     </>
   )
 }
+
 
 export default App
