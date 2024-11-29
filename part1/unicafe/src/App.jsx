@@ -15,14 +15,14 @@ Heading.propTypes = {
 const Statistics = ({good,neutral,bad,total,average,positive}) => {
 
   return (
-    <>
+    <tbody>
         <StatisticsLine text="Good" value={good} />
         <StatisticsLine text="Neutral"  value={neutral}/>
         <StatisticsLine text="Bad"  value={bad}/>
         <StatisticsLine text="All" value={total} />
         <StatisticsLine text="Average" value={average} />
         <StatisticsLine text="Positive" value={positive}/>
-    </>
+    </tbody>
   )
 }
 
@@ -37,9 +37,10 @@ Statistics.propTypes = {
 
 const StatisticsLine = (props) => {
   return (
-    <>
-    <p>{props.text} {props.value} </p>
-    </>
+    <tr>
+    <td>{props.text}</td>
+    <td>{props.value}</td>
+    </tr>
   )
 }
 
@@ -105,9 +106,9 @@ function App() {
      <button onClick={() => handleClick("Bad")}>Bad</button> 
      <Heading title="Statistics" />
     {hasFeedback() ? (
-      <>
+      <table>
         <Statistics good={good} neutral={neutral} bad={bad} total={total} average={average} positive={positive} />
-      </>
+      </table>
     ) : (
       <p>No feedback given.</p>
     )}
