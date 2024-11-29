@@ -12,17 +12,40 @@ Heading.propTypes = {
   title: PropTypes.string.isRequired
 }
 
-const Statistics = (props) => {
-  console.log(props.hasFeedback);
+const Statistics = ({good,neutral,bad,total,average,positive}) => {
+
   return (
     <>
-        <p>{props.text} {props.value}</p>
+        <StatisticsLine text="Good" value={good} />
+        <StatisticsLine text="Neutral"  value={neutral}/>
+        <StatisticsLine text="Bad"  value={bad}/>
+        <StatisticsLine text="All" value={total} />
+        <StatisticsLine text="Average" value={average} />
+        <StatisticsLine text="Positive" value={positive}/>
     </>
   )
 }
 
 Statistics.propTypes = {
-  hasFeedback: PropTypes.bool
+  good: PropTypes.number,
+  neutral: PropTypes.number,
+  bad: PropTypes.number,
+  total: PropTypes.number,
+  average: PropTypes.number,
+  positive: PropTypes.number
+}
+
+const StatisticsLine = (props) => {
+  return (
+    <>
+    <p>{props.text} {props.value} </p>
+    </>
+  )
+}
+
+StatisticsLine.propTypes = {
+  text: PropTypes.string,
+  value: PropTypes.number
 }
 
 Statistics.propTypes = {
@@ -83,12 +106,7 @@ function App() {
      <Heading title="Statistics" />
     {hasFeedback() ? (
       <>
-        <Statistics text="Good" value={good}  />
-        <Statistics text="Neutral" value={neutral} />
-        <Statistics text="Bad" value={bad} />
-        <Statistics text="All" value={total} />
-        <Statistics text="Average" value={average} />
-        <Statistics text="Positive" value={positive }/>
+        <Statistics good={good} neutral={neutral} bad={bad} total={total} average={average} positive={positive} />
       </>
     ) : (
       <p>No feedback given.</p>
