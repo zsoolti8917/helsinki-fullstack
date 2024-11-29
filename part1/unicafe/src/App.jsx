@@ -13,9 +13,16 @@ Heading.propTypes = {
 }
 
 const Statistics = (props) => {
-  return(
-    <p>{props.text} {props.value}</p>
+  console.log(props.hasFeedback);
+  return (
+    <>
+        <p>{props.text} {props.value}</p>
+    </>
   )
+}
+
+Statistics.propTypes = {
+  hasFeedback: PropTypes.bool
 }
 
 Statistics.propTypes = {
@@ -63,6 +70,10 @@ function App() {
 
   }, [good, bad, neutral, total]);
 
+  const hasFeedback = () => {
+    return good !== 0 || neutral !== 0 || bad !==0
+  }
+
   return (
     <>
      <Heading title="Give feedback" />
@@ -70,12 +81,19 @@ function App() {
      <button onClick={() => handleClick("Neutral")}>Neutral</button> 
      <button onClick={() => handleClick("Bad")}>Bad</button> 
      <Heading title="Statistics" />
-     <Statistics text="Good" value={good} />
-     <Statistics text="Neutral" value={neutral} />
-     <Statistics text="Bad" value={bad} />
-     <Statistics text="All" value={total} />
-     <Statistics text="Average" value={average} />
-     <Statistics text="Positive" value={positive} />
+    {hasFeedback() ? (
+      <>
+        <Statistics text="Good" value={good}  />
+        <Statistics text="Neutral" value={neutral} />
+        <Statistics text="Bad" value={bad} />
+        <Statistics text="All" value={total} />
+        <Statistics text="Average" value={average} />
+        <Statistics text="Positive" value={positive }/>
+      </>
+    ) : (
+      <p>No feedback given.</p>
+    )}
+     
     </>
   )
 }
