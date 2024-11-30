@@ -2,7 +2,6 @@ import { useState } from 'react'
 import PropTypes from "prop-types"
 
 const Button = (props) => {
-  console.log(typeof(props.eventHandler))
   return(
     <button onClick={props.eventHandler}>{props.text}</button>
   )
@@ -27,15 +26,28 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
 
   const clickHandler = () => {
     setSelected(Math.floor(Math.random()*anecdotes.length))
   }
+
+  const vote = () => {
+    const copy = [...votes]
+    copy[selected] += 1
+    setVotes(copy)
+    console.log("Array", copy)
+  }
+
   return (
     <div>
       {anecdotes[selected]}
       <br/>
+      <p>has {votes[selected]} votes</p>
+      <br/>
       <Button eventHandler = {clickHandler} text="Click here"/>
+      <br/>
+      <Button eventHandler = {vote} text="Vote"/>
     </div>
   )
 }
