@@ -1,4 +1,6 @@
 import Part from './Part.jsx'
+import PropTypes from 'prop-types'
+
 const Content = ({parts}) => {
     console.log(parts)
   return (
@@ -12,6 +14,16 @@ const Content = ({parts}) => {
     </>
 
   )
+}
+
+Content.propTypes = {
+    parts: PropTypes.arrayOf(
+        PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            exercises: PropTypes.number.isRequired,
+            id: PropTypes.number.isRequired
+        })
+    ).isRequired
 }
 
 export default Content
