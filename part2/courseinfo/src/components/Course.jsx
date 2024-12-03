@@ -4,11 +4,19 @@ import PropTypes from 'prop-types'
 import Total from './Total.jsx'
 const Course = (props) => {
 const {name, parts} = props.course;
+const totalExercises = parts.reduce((sum, part) => {
+    return(
+        sum + part.exercises
+    )
+}, 0)
+
+console.log(totalExercises)
     return (
         <>
             <Header course={name} />
             <Content parts={parts} />
-            <Total total={parts.length} />
+            <Total total={parts.length} totalExercises={totalExercises}/>
+            
         </>
     )
 }
