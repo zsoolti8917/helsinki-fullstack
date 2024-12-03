@@ -9,11 +9,18 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     const person = {
       name: newName,
     }
-    setPersons(persons.concat(person))
-    setNewName('')
+
+    if(!(persons.find((element) => element.name === person.name))){
+      setPersons(persons.concat(person))
+      setNewName('')
+    }else{
+      alert(`${person.name} is already on the list`)
+    }
+
     console.log(persons)
   }
 
