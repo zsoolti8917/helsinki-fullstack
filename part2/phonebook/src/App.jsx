@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import Persons from './components/Persons.jsx'
-import { getAll, create, deletePerson } from './services/people.js'
+import { getAll, create, deletePerson, updatePerson } from './services/people.js'
 
 function App() {
   const [persons, setPersons] = useState([])
@@ -20,10 +20,12 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    const newId = persons.length > 0 ? Math.max(...persons.map(person => parseInt(person.id))) + 1 : 1;
+
     const person = {
       name: newName,
       number: newNumber,
-      id: (persons.length+1).toString()
+      id: newId.toString()
     }
 
     if(!(persons.find((element) => element.name === person.name))){
@@ -33,7 +35,13 @@ function App() {
       setNewName('')
       setNewNumber('')
     }else{
-      alert(`${person.name} is already on the list`)
+      if (window.confirm(`${newName} is already added to the Phonebook, replace the old number with the new one?`)){
+        const oldPerson = persons.find(n => n.name === person.name)
+        const changedPerson = {...oldPerson, number: person.number}
+        updatePerson(oldPerson.id, changedPerson).then((res) => {
+          setPersons(persons.map((x => x.name === person.name ? res : x)))
+        })
+      }
     }
 
   }
@@ -53,6 +61,9 @@ function App() {
   const deleteHandleChange = (id) => {
     if (window.confirm(`Delete person with id ${id}?`)) {
       deletePerson(id).then(() => {
+        setPersons(persons.filter(person => person.id !== id))
+      }).catch(error => {
+        alert(`The person with id ${id} was already deleted from the server`)
         setPersons(persons.filter(person => person.id !== id))
       }).catch(error => {
         console.log(error)
