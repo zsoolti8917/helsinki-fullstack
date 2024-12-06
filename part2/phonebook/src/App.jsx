@@ -2,20 +2,20 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import Persons from './components/Persons.jsx'
-import axios from 'axios'
+import { getAll, create } from './services/people.js'
 
 function App() {
   const [persons, setPersons] = useState([])
-
-useEffect(() => {
-  axios.get('http://localhost:3000/persons').then(res => {
-    console.log(res)
-    setPersons(res.data)
-  })
-}, [])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+
+
+    useEffect(() => {
+      getAll().then(res => {
+        setPersons(res)
+      })
+    }, [])
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -23,11 +23,13 @@ useEffect(() => {
     const person = {
       name: newName,
       number: newNumber,
-      id: persons.length+1
+      id: (persons.length+1).toString()
     }
 
     if(!(persons.find((element) => element.name === person.name))){
-      setPersons(persons.concat(person))
+      create(person).then((res) => {
+        setPersons(persons.concat(res))
+      })
       setNewName('')
       setNewNumber('')
     }else{
