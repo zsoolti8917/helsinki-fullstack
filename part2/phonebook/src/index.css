@@ -1,0 +1,14 @@
+h2 {
+    color:green;
+    font-style: italic;
+}
+
+.container {
+    border: 5px solid red;
+    padding: 10px;
+    background-color: lightblue;
+}
+
+.text {
+    font-size: large;
+}

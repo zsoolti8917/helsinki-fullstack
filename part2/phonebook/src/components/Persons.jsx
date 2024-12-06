@@ -16,7 +16,8 @@ const Persons = ({notesToShow, deleteHandleChange}) => {
 }
 
 Persons.propTypes = {
-    notesToShow: PropTypes.array
+    notesToShow: PropTypes.array,
+    deleteHandleChange: PropTypes.func
 }
 
 export default Persons

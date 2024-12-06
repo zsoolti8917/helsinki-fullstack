@@ -3,13 +3,13 @@ import Filter from './components/Filter.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import Persons from './components/Persons.jsx'
 import { getAll, create, deletePerson, updatePerson } from './services/people.js'
-
+import Notification from './components/Notification.jsx'
 function App() {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
-
+  const [message, setMessage] = useState(null)
 
     useEffect(() => {
       getAll().then(res => {
@@ -34,6 +34,10 @@ function App() {
       })
       setNewName('')
       setNewNumber('')
+      setMessage(`Added ${person.name} succesfully`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }else{
       if (window.confirm(`${newName} is already added to the Phonebook, replace the old number with the new one?`)){
         const oldPerson = persons.find(n => n.name === person.name)
@@ -41,9 +45,14 @@ function App() {
         updatePerson(oldPerson.id, changedPerson).then((res) => {
           setPersons(persons.map((x => x.name === person.name ? res : x)))
         })
+        setMessage(`Updated ${person.name}'s phone number succesfully`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       }
     }
 
+    console.log(message)
   }
 
   const handleInputChange = (event) => {
@@ -60,14 +69,19 @@ function App() {
 
   const deleteHandleChange = (id) => {
     if (window.confirm(`Delete person with id ${id}?`)) {
+      const currentPerson = persons.filter(person => person.id !== id)
       deletePerson(id).then(() => {
-        setPersons(persons.filter(person => person.id !== id))
-      }).catch(error => {
-        alert(`The person with id ${id} was already deleted from the server`)
-        setPersons(persons.filter(person => person.id !== id))
+        setPersons(currentPerson)
+        setMessage(`Deleted ${currentPerson.name} from the database`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       }).catch(error => {
         console.log(error)
-        alert(`The person with id ${id} was already deleted from the server`)
+        setMessage(`The person with ${currentPerson.name} was already deleted from the server`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
         setPersons(persons.filter(person => person.id !== id))
       })
     }
@@ -76,10 +90,9 @@ function App() {
   const notesToShow = (search === '') ? persons : persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
   return (
     <div>
+      <Notification message={message} />
       <h2>Phonebook</h2>
-        
         <Filter value= {search} eventHandler={handleSearchChange}/>
-
       <h2>Add a new</h2>
         <PersonForm handleSubmit={handleSubmit} handleInputChange={handleInputChange} handleInputNumChange={handleInputNumChange} name={newName} number={newNumber}/>
       <h2>Numbers</h2>
