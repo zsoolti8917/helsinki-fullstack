@@ -46,6 +46,11 @@ useEffect(() => {
     }
   }, [countriesToShow])
 
+  const handleShowButton = (name) => {
+    console.log(name.toLowerCase())
+    setCountriesToShow([name.toLowerCase()])
+  }
+
   return (
     <>
       <form type="submit">
@@ -60,7 +65,7 @@ useEffect(() => {
         ) : countriesToShow.length === 1 ? (
           <Country country={selectedCountryInfo} />
         ) : (
-          <Countries countriesToShow={countriesToShow} />
+          <Countries countriesToShow={countriesToShow} handleShowButton={handleShowButton} />
         )}
        
       </ul>
@@ -68,19 +73,19 @@ useEffect(() => {
   )
 }
 
-const Countries = ({countriesToShow}) => {
+const Countries = ({countriesToShow, handleShowButton}) => {
 
   return (
-    <>
+    <ul>
       {countriesToShow.map((country, index) => (
-        <li key={index}>{country}</li>
+        <li key={index}>{country} <button onClick={() => handleShowButton(country)}> show </button></li>
+        
       ))}
-    </>
+    </ul>
   )
 }
 
 const Country = ({country}) => {
-  console.log(country)
   if (!country){
     return null;
   } 
